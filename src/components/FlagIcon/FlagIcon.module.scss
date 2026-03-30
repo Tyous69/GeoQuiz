@@ -1,0 +1,47 @@
+@use '../../styles/variables' as *;
+
+.wrapper {
+  display: inline-flex;
+  border-radius: $r-sm;
+  overflow: hidden;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.3);
+  flex-shrink: 0;
+  line-height: 0;
+}
+
+.flag {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.placeholder {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-surface);
+  border-radius: $r-sm;
+  border: 1px solid var(--border);
+}
+
+// Sizes (3:2 ratio)
+.sm {
+  width: 36px;
+  height: 24px;
+}
+
+.md {
+  width: 60px;
+  height: 40px;
+}
+
+.lg {
+  width: 90px;
+  height: 60px;
+}
+
+.xl {
+  width: 150px;
+  height: 100px;
+}
