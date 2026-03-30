@@ -1,0 +1,122 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.page {
+  padding-top: calc($header-h + $sp-12);
+  padding-bottom: $sp-20;
+  min-height: 100vh;
+}
+
+.header { margin-bottom: $sp-10; }
+
+.eyebrow {
+  font-size: $fs-sm;
+  font-weight: 600;
+  color: var(--primary);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: $sp-2;
+}
+
+.title {
+  font-family: $font-display;
+  font-size: clamp($fs-3xl, 4vw, $fs-5xl);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.empty {
+  @include card;
+  padding: $sp-16;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $sp-4;
+  color: var(--text-muted);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: $sp-4;
+}
+
+.card {
+  @include card;
+  padding: $sp-6;
+  display: flex;
+  flex-direction: column;
+  gap: $sp-3;
+  transition: border-color $t-base;
+
+  &.perfect {
+    border-color: var(--warning);
+    background: linear-gradient(135deg, var(--bg-card), color-mix(in srgb, var(--warning) 5%, var(--bg-card)));
+  }
+}
+
+.cardTop { @include flex-between; }
+
+.modeName {
+  font-family: $font-display;
+  font-size: $fs-sm;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.diffBadge {
+  font-size: $fs-xs;
+  font-weight: 700;
+  padding: $sp-1 $sp-3;
+  border-radius: $r-full;
+}
+
+.success { background: var(--success-light); color: var(--success); }
+.warning { background: var(--warning-light); color: var(--warning); }
+.error   { background: var(--error-light);   color: var(--error); }
+
+.continent { font-size: $fs-xs; color: var(--text-muted); }
+
+.perfectBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: $sp-1;
+  font-size: $fs-xs;
+  font-weight: 700;
+  color: var(--warning);
+  background: var(--warning-light);
+  padding: $sp-1 $sp-3;
+  border-radius: $r-full;
+  width: fit-content;
+}
+
+.cardStats {
+  display: flex;
+  gap: $sp-5;
+  flex-wrap: wrap;
+  padding-top: $sp-3;
+  border-top: 1px solid var(--border);
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.statIcon {
+  color: var(--text-muted);
+  margin-bottom: 2px;
+}
+
+.statVal {
+  font-family: $font-display;
+  font-size: $fs-2xl;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: var(--text);
+}
+
+.statLbl { font-size: $fs-xs; color: var(--text-muted); }
