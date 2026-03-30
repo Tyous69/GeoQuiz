@@ -1,0 +1,145 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.page {
+  min-height: 100vh;
+  padding-top: $header-h;
+  display: flex;
+  flex-direction: column;
+}
+
+// ─── Top bar ─────────────────────────────────────────────────────────────────
+.topBar {
+  position: sticky;
+  top: $header-h;
+  z-index: 10;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  padding: $sp-3 0;
+}
+
+.topInner {
+  @include flex-between;
+  gap: $sp-6;
+  align-items: center;
+}
+
+.progressInfo {
+  display: flex;
+  flex-direction: column;
+  gap: $sp-2;
+  flex: 1;
+}
+
+.questionCount {
+  font-family: $font-display;
+  font-size: $fs-sm;
+  font-weight: 700;
+  color: var(--text);
+
+  span {
+    color: var(--text-muted);
+    font-weight: 400;
+  }
+}
+
+.progressWrap {
+  width: 100%;
+}
+
+.topRight {
+  display: flex;
+  align-items: center;
+  gap: $sp-4;
+  flex-shrink: 0;
+}
+
+.scorePreview {
+  font-family: $font-display;
+  font-size: $fs-sm;
+  font-weight: 700;
+  color: var(--success);
+
+  span {
+    color: var(--text-muted);
+    font-weight: 400;
+  }
+}
+
+// ─── Content ─────────────────────────────────────────────────────────────────
+.content {
+  flex: 1;
+  padding: $sp-10 0 $sp-16;
+  display: flex;
+  align-items: flex-start;
+}
+
+.card {
+  @include card;
+  padding: $sp-10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $sp-6;
+  max-width: 720px;
+  margin: 0 auto;
+  animation: slideIn 0.25s ease;
+
+  @include responsive($bp-sm) {
+    padding: $sp-6;
+  }
+}
+
+// ─── Feedback banner ─────────────────────────────────────────────────────────
+.feedbackBanner {
+  width: 100%;
+  padding: $sp-3 $sp-5;
+  border-radius: $r-lg;
+  font-size: $fs-sm;
+  font-weight: 600;
+  text-align: center;
+  animation: bannerIn 0.2s ease;
+
+  &.correct {
+    background: var(--success-light);
+    color: var(--success);
+    border: 1px solid var(--success);
+  }
+
+  &.wrong {
+    background: var(--error-light);
+    color: var(--error);
+    border: 1px solid var(--error);
+  }
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes bannerIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.quitBtn {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: 1.5px solid var(--border);
+  background: var(--bg-surface);
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+
+  &:hover {
+    background: var(--error-light);
+    border-color: var(--error);
+    color: var(--error);
+  }
+}
