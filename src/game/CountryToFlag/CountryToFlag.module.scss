@@ -1,0 +1,107 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.wrapper { display: flex; flex-direction: column; align-items: center; gap: $sp-8; width: 100%; }
+.prompt { font-size: $fs-lg; font-weight: 500; color: var(--text-muted); }
+
+.countryDisplay {
+  @include flex-center;
+  flex-direction: column;
+  gap: $sp-2;
+  padding: $sp-8 $sp-12;
+  background: var(--bg-surface);
+  border-radius: $r-2xl;
+  border: 1px solid var(--border);
+  text-align: center;
+}
+
+.countryName { font-family: $font-display; font-size: $fs-4xl; font-weight: 800; letter-spacing: -0.03em; }
+.continent { font-size: $fs-sm; color: var(--primary); font-weight: 500; }
+
+.options {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $sp-4;
+  width: 100%;
+  max-width: 480px;
+}
+
+.option {
+  @include card;
+  padding: $sp-5;
+  @include flex-center;
+  cursor: pointer;
+  transition: all $t-base;
+  position: relative;
+
+  &:hover:not(:disabled) { border-color: var(--primary); background: var(--bg-surface); transform: scale(1.02); }
+  &:disabled { cursor: default; }
+}
+
+.selecting { border-color: var(--primary) !important; background: var(--primary-light) !important; }
+.correct   { border-color: var(--success) !important; background: var(--success-light) !important; }
+.wrong     { border-color: var(--error)   !important; background: var(--error-light)   !important; }
+
+.badge {
+  position: absolute;
+  top: $sp-2; right: $sp-2;
+  width: 22px; height: 22px;
+  border-radius: $r-full;
+  @include flex-center;
+  font-size: $fs-xs;
+  font-weight: 700;
+
+  &.correct { background: var(--success); color: #fff; }
+  &.wrong   { background: var(--error);   color: #fff; }
+}
+
+/* Free mode */
+.freeWrap { display: flex; flex-direction: column; align-items: center; gap: $sp-5; width: 100%; max-width: 480px; }
+
+.flagHint {
+  padding: $sp-6;
+  background: var(--bg-surface);
+  border-radius: $r-2xl;
+  border: 1px solid var(--border);
+}
+
+.freeInputRow { display: flex; gap: $sp-3; width: 100%; }
+
+.freeInput {
+  flex: 1; height: 48px; padding: 0 $sp-4;
+  border-radius: $r-full;
+  border: 1.5px solid var(--border);
+  background: var(--bg-surface);
+  color: var(--text);
+  font-size: $fs-base;
+  font-family: $font-body;
+  outline: none;
+  transition: border-color $t-base;
+
+  &:focus { border-color: var(--primary); }
+  &::placeholder { color: var(--text-muted); }
+  &:disabled { opacity: 0.6; }
+}
+
+.inputCorrect { border-color: var(--success) !important; background: var(--success-light) !important; }
+.inputWrong   { border-color: var(--error)   !important; background: var(--error-light)   !important; }
+
+.submitBtn {
+  height: 48px; padding: 0 $sp-6;
+  border-radius: $r-full;
+  background: var(--primary); color: #fff;
+  font-family: $font-display; font-size: $fs-sm; font-weight: 600;
+  border: none; cursor: pointer;
+  transition: all $t-base; flex-shrink: 0;
+
+  &:hover:not(:disabled) { background: var(--primary-hover); }
+  &:disabled { opacity: 0.4; cursor: not-allowed; }
+}
+
+.freeResult {
+  font-size: $fs-sm; font-weight: 600;
+  padding: $sp-3 $sp-5; border-radius: $r-lg;
+  width: 100%; text-align: center;
+}
+.correctResult { background: var(--success-light); color: var(--success); border: 1px solid var(--success); }
+.wrongResult   { background: var(--error-light);   color: var(--error);   border: 1px solid var(--error); }
