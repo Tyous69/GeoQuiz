@@ -1,0 +1,279 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.page { padding-top: $header-h; }
+
+// ── Hero ──────────────────────────────────────────────────────────────────────
+.hero {
+  position: relative;
+  min-height: calc(100vh - $header-h);
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+.heroBg {
+  position: absolute;
+  inset: 0;
+  background: var(--gradient-hero);
+  pointer-events: none;
+}
+
+.heroContent {
+  @include container;
+  position: relative;
+  z-index: 2;
+  max-width: 580px;
+  padding-top: $sp-16;
+  padding-bottom: $sp-16;
+  display: flex;
+  flex-direction: column;
+  gap: $sp-5;
+}
+
+.heroEyebrow {
+  display: flex;
+  align-items: center;
+  gap: $sp-2;
+  font-size: $fs-sm;
+  font-weight: 600;
+  color: var(--primary);
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  opacity: 0;
+  animation: fadeUp 0.5s ease 0.1s forwards;
+}
+
+.heroTitle {
+  font-family: $font-display;
+  font-size: clamp($fs-4xl, 7vw, $fs-7xl);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  opacity: 0;
+  animation: fadeUp 0.5s ease 0.2s forwards;
+}
+
+.heroAccent { color: var(--primary); }
+
+.heroDescription {
+  font-size: $fs-lg;
+  color: var(--text-muted);
+  line-height: 1.7;
+  max-width: 460px;
+  opacity: 0;
+  animation: fadeUp 0.5s ease 0.3s forwards;
+}
+
+.heroContent button {
+  opacity: 0;
+  animation: fadeUp 0.5s ease 0.4s forwards;
+  align-self: flex-start;
+  box-shadow: 0 0 40px var(--primary-glow);
+}
+
+.heroDecor {
+  position: absolute;
+  right: 3%;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+  animation: fadeIn 1s ease 0.6s forwards;
+
+  @include responsive($bp-lg) {
+    right: -5%;
+    opacity: 0.35 !important;
+    animation: fadeIn 1s ease 0.6s forwards;
+    transform: translateY(-50%) scale(0.75);
+  }
+  @include responsive($bp-md) { display: none; }
+}
+
+// ── Stats ─────────────────────────────────────────────────────────────────────
+.stats {
+  padding: $sp-12 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $sp-8;
+  text-align: center;
+
+  @include responsive($bp-sm) { grid-template-columns: 1fr; gap: $sp-6; }
+}
+
+.statCard { display: flex; flex-direction: column; gap: $sp-1; }
+
+.statValue {
+  font-family: $font-display;
+  font-size: $fs-5xl;
+  font-weight: 800;
+  color: var(--primary);
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.statLabel { font-size: $fs-sm; color: var(--text-muted); font-weight: 500; }
+
+// ── Sections ──────────────────────────────────────────────────────────────────
+.section { padding: $sp-20 0; }
+
+.sectionHeader { text-align: center; margin-bottom: $sp-12; }
+
+.eyebrow {
+  font-size: $fs-sm;
+  font-weight: 600;
+  color: var(--primary);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: $sp-3;
+}
+
+.sectionTitle {
+  font-family: $font-display;
+  font-size: clamp($fs-2xl, 4vw, $fs-4xl);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+// Modes
+.modesGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $sp-6;
+
+  @include responsive($bp-md) { grid-template-columns: 1fr; }
+}
+
+.modeCard {
+  @include card;
+  padding: $sp-8;
+  transition: border-color $t-base, transform $t-base, box-shadow $t-base;
+
+  &:hover { border-color: var(--primary); transform: translateY(-4px); box-shadow: var(--shadow); }
+
+  h3 {
+    font-family: $font-display;
+    font-size: $fs-lg;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin: $sp-4 0 $sp-2;
+    color: var(--text);
+  }
+
+  p { font-size: $fs-sm; color: var(--text-muted); line-height: 1.6; }
+}
+
+.modeIcon {
+  width: 44px;
+  height: 44px;
+  border-radius: $r-lg;
+  background: var(--primary-light);
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+}
+
+// Difficulties
+.diffGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $sp-6;
+
+  @include responsive($bp-md) { grid-template-columns: 1fr; }
+}
+
+.diffCard {
+  @include card;
+  padding: $sp-6;
+  display: flex;
+  flex-direction: column;
+  gap: $sp-3;
+
+  h3 {
+    font-family: $font-display;
+    font-size: $fs-xl;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--text);
+  }
+
+  p { font-size: $fs-sm; color: var(--text-muted); line-height: 1.6; }
+}
+
+.diffTop { display: flex; align-items: center; justify-content: space-between; }
+
+.diffIcon {
+  width: 36px;
+  height: 36px;
+  border-radius: $r-md;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+}
+
+.diffTime {
+  font-family: $font-display;
+  font-size: $fs-sm;
+  font-weight: 700;
+  padding: $sp-1 $sp-3;
+  border-radius: $r-full;
+  background: var(--bg-hover);
+}
+
+.success .diffIcon { background: var(--success-light); color: var(--success); }
+.success .diffTime { color: var(--success); }
+.warning .diffIcon { background: var(--warning-light); color: var(--warning); }
+.warning .diffTime { color: var(--warning); }
+.error   .diffIcon { background: var(--error-light);   color: var(--error); }
+.error   .diffTime { color: var(--error); }
+
+// CTA
+.ctaSection { padding: $sp-20 0 $sp-24; }
+
+.ctaCard {
+  @include card;
+  padding: $sp-16 $sp-12;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--bg-card), var(--bg-surface));
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 60% 80% at 50% 0%, var(--primary-light), transparent);
+    pointer-events: none;
+  }
+
+  h2 {
+    font-family: $font-display;
+    font-size: $fs-3xl;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    margin-bottom: $sp-3;
+    position: relative;
+  }
+
+  p { font-size: $fs-lg; color: var(--text-muted); margin-bottom: $sp-8; position: relative; }
+
+  button { position: relative; box-shadow: 0 0 40px var(--primary-glow); }
+}
+
+// Animations
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
