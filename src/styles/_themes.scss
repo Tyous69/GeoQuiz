@@ -1,0 +1,62 @@
+:root,
+[data-theme='dark'] {
+  --bg: #06090F;
+  --bg-card: #0D1321;
+  --bg-surface: #131D2E;
+  --bg-hover: #192540;
+  --text: #EDF2FA;
+  --text-muted: #5E7799;
+  --text-subtle: #2D3F58;
+  --primary: #009EDB;
+  --primary-hover: #0089BF;
+  --primary-light: rgba(0, 158, 219, 0.12);
+  --primary-glow: rgba(0, 158, 219, 0.25);
+  --border: #162035;
+  --border-hover: #1E2E47;
+  --success: #22C55E;
+  --success-light: rgba(34, 197, 94, 0.12);
+  --error: #F0544F;
+  --error-light: rgba(240, 84, 79, 0.12);
+  --warning: #F59E0B;
+  --warning-light: rgba(245, 158, 11, 0.12);
+  --shadow-sm: 0 2px 12px rgba(0, 0, 0, 0.4);
+  --shadow: 0 4px 32px rgba(0, 0, 0, 0.6);
+  --shadow-lg: 0 8px 64px rgba(0, 0, 0, 0.8);
+  --gradient-hero: radial-gradient(ellipse 80% 60% at 60% 40%, rgba(0, 158, 219, 0.06) 0%, transparent 70%);
+  /* Map colors: dark mode → countries are bright on dark ocean */
+  --map-ocean: #0A1628;
+  --map-country: #1E3A5A;
+  --map-country-stroke: #0D1F35;
+  --map-target: #009EDB;
+}
+
+[data-theme='light'] {
+  --bg: #EEF3FA;
+  --bg-card: #FFFFFF;
+  --bg-surface: #E2EAF5;
+  --bg-hover: #D5E3F0;
+  --text: #0B1828;
+  --text-muted: #4A6282;
+  --text-subtle: #A8BAD0;
+  --primary: #0083B8;
+  --primary-hover: #006D9A;
+  --primary-light: rgba(0, 131, 184, 0.1);
+  --primary-glow: rgba(0, 131, 184, 0.2);
+  --border: #C8D9EE;
+  --border-hover: #B0C8E3;
+  --success: #15803D;
+  --success-light: rgba(21, 128, 61, 0.1);
+  --error: #DC2626;
+  --error-light: rgba(220, 38, 38, 0.1);
+  --warning: #B45309;
+  --warning-light: rgba(180, 83, 9, 0.1);
+  --shadow-sm: 0 2px 12px rgba(0, 0, 0, 0.06);
+  --shadow: 0 4px 32px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 8px 64px rgba(0, 0, 0, 0.14);
+  --gradient-hero: radial-gradient(ellipse 80% 60% at 60% 40%, rgba(0, 131, 184, 0.06) 0%, transparent 70%);
+  /* Map colors: light mode → countries are dark on light ocean */
+  --map-ocean: #C8DFF0;
+  --map-country: #6AAEC8;
+  --map-country-stroke: #A0C8DF;
+  --map-target: #0083B8;
+}
