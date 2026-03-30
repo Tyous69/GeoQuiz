@@ -1,0 +1,54 @@
+@use '../../styles/variables' as *;
+
+.timer {
+  position: relative;
+  width: 56px;
+  height: 56px;
+  flex-shrink: 0;
+
+  svg {
+    position: absolute;
+    inset: 0;
+  }
+}
+
+.label {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: $font-display;
+  font-size: $fs-base;
+  font-weight: 700;
+  color: currentColor;
+}
+
+.arc {
+  transition: stroke-dashoffset 0.9s linear;
+}
+
+.normal {
+  color: var(--primary);
+}
+
+.low {
+  color: var(--warning);
+
+  .label {
+    animation: pulse 1s ease infinite;
+  }
+}
+
+.critical {
+  color: var(--error);
+
+  .label {
+    animation: pulse 0.5s ease infinite;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
