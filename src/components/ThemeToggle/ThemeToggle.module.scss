@@ -1,0 +1,25 @@
+@use '../../styles/variables' as *;
+
+.toggle {
+  width: 36px;
+  height: 36px;
+  border-radius: $r-md;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  transition: color $t-base, background $t-base, border-color $t-base;
+  cursor: pointer;
+
+  &:hover {
+    color: var(--text);
+    background: var(--bg-hover);
+    border-color: var(--border-hover);
+  }
+
+  svg {
+    flex-shrink: 0;
+  }
+}
