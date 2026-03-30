@@ -1,0 +1,343 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.page {
+  padding-top: calc($header-h + $sp-12);
+  padding-bottom: $sp-20;
+  min-height: 100vh;
+}
+
+.header {
+  margin-bottom: $sp-12;
+}
+
+.eyebrow {
+  font-size: $fs-sm;
+  font-weight: 600;
+  color: var(--primary);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: $sp-2;
+}
+
+.title {
+  font-family: $font-display;
+  font-size: clamp($fs-3xl, 4vw, $fs-5xl);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.sections {
+  display: flex;
+  flex-direction: column;
+  gap: $sp-10;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: $sp-4;
+}
+
+.sectionLabel {
+  font-family: $font-display;
+  font-size: $fs-base;
+  font-weight: 600;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: $sp-3;
+  letter-spacing: -0.01em;
+
+  span:first-child {
+    font-size: $fs-xs;
+    font-weight: 700;
+    color: var(--primary);
+    background: var(--primary-light);
+    border-radius: $r-full;
+    width: 24px;
+    height: 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.available {
+  font-size: $fs-xs;
+  color: var(--text-subtle);
+  font-weight: 400;
+}
+
+// ─── Continent ────────────────────────────────────────────────────────────────
+.continentGrid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: $sp-3;
+
+  @include responsive($bp-lg) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @include responsive($bp-sm) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.continentCard {
+  @include card;
+  padding: $sp-4 $sp-3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $sp-1;
+  cursor: pointer;
+  transition: border-color $t-base, background $t-base, transform $t-fast;
+  text-align: center;
+
+  &:hover {
+    border-color: var(--primary);
+    background: var(--bg-surface);
+  }
+
+  &.selected {
+    border-color: var(--primary);
+    background: var(--primary-light);
+  }
+
+  &:active {
+    transform: scale(0.97);
+  }
+}
+
+.continentEmoji {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.continentName {
+  font-family: $font-display;
+  font-size: $fs-sm;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.continentCount {
+  font-size: $fs-xs;
+  color: var(--text-muted);
+}
+
+// ─── Mode ─────────────────────────────────────────────────────────────────────
+.modeGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $sp-4;
+
+  @include responsive($bp-md) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.modeCard {
+  @include card;
+  padding: $sp-5 $sp-6;
+  display: flex;
+  align-items: center;
+  gap: $sp-4;
+  cursor: pointer;
+  transition: border-color $t-base, background $t-base, transform $t-fast;
+  text-align: left;
+
+  &:hover {
+    border-color: var(--primary);
+    background: var(--bg-surface);
+  }
+
+  &.selected {
+    border-color: var(--primary);
+    background: var(--primary-light);
+  }
+
+  &:active { transform: scale(0.98); }
+}
+
+.modeIcon {
+  font-size: 1.75rem;
+  flex-shrink: 0;
+}
+
+.modeName {
+  font-family: $font-display;
+  font-size: $fs-base;
+  font-weight: 700;
+  margin-bottom: $sp-1;
+  letter-spacing: -0.01em;
+}
+
+.modeDesc {
+  font-size: $fs-xs;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+// ─── Difficulty ───────────────────────────────────────────────────────────────
+.diffGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $sp-4;
+
+  @include responsive($bp-md) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.diffCard {
+  @include card;
+  padding: $sp-5 $sp-6;
+  cursor: pointer;
+  transition: border-color $t-base, background $t-base, transform $t-fast;
+  text-align: left;
+
+  &:hover {
+    background: var(--bg-surface);
+  }
+
+  &:active { transform: scale(0.98); }
+
+  &.success.selected { border-color: var(--success); background: var(--success-light); }
+  &.warning.selected { border-color: var(--warning); background: var(--warning-light); }
+  &.error.selected   { border-color: var(--error);   background: var(--error-light); }
+}
+
+.diffTop {
+  @include flex-between;
+  margin-bottom: $sp-2;
+}
+
+.diffName {
+  font-family: $font-display;
+  font-size: $fs-base;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.diffTime {
+  font-family: $font-display;
+  font-size: $fs-sm;
+  font-weight: 700;
+  padding: $sp-1 $sp-3;
+  border-radius: $r-full;
+  background: var(--bg-hover);
+}
+
+.diffDesc {
+  font-size: $fs-xs;
+  color: var(--text-muted);
+}
+
+.success .diffTime { color: var(--success); }
+.warning .diffTime { color: var(--warning); }
+.error   .diffTime { color: var(--error); }
+
+// ─── Question count ───────────────────────────────────────────────────────────
+.countRow {
+  display: flex;
+  gap: $sp-3;
+  flex-wrap: wrap;
+}
+
+.countBtn {
+  height: 44px;
+  padding: 0 $sp-6;
+  border-radius: $r-full;
+  border: 1.5px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text-muted);
+  font-family: $font-display;
+  font-size: $fs-sm;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all $t-base;
+
+  &:hover:not(:disabled) {
+    border-color: var(--primary);
+    color: var(--primary);
+    background: var(--primary-light);
+  }
+
+  &.selected {
+    border-color: var(--primary);
+    background: var(--primary);
+    color: #fff;
+  }
+
+  &:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+}
+
+// ─── Footer ───────────────────────────────────────────────────────────────────
+.footer {
+  margin-top: $sp-12;
+  padding-top: $sp-8;
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $sp-6;
+  flex-wrap: wrap;
+}
+
+.summary {
+  display: flex;
+  align-items: center;
+  gap: $sp-3;
+  flex-wrap: wrap;
+  font-size: $fs-sm;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.dot {
+  color: var(--text-subtle);
+}
+
+.success { color: var(--success); }
+.warning { color: var(--warning); }
+.error   { color: var(--error); }
+
+// FIX: force text color on all button cards (browser default overrides CSS vars)
+.continentCard,
+.modeCard,
+.diffCard,
+.countBtn {
+  color: var(--text) !important;
+}
+
+.continentName { color: var(--text) !important; }
+.continentCount { color: var(--text-muted) !important; }
+.modeName { color: var(--text) !important; }
+.modeDesc { color: var(--text-muted) !important; }
+.diffName { color: var(--text) !important; }
+.diffDesc { color: var(--text-muted) !important; }
+
+.diffIconWrap {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 6px;
+  opacity: 0.8;
+}
+
+.inputModeGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $sp-4;
+
+  @include responsive($bp-sm) { grid-template-columns: 1fr; }
+}
+
+.continentIcon {
+  color: var(--primary);
+  flex-shrink: 0;
+}

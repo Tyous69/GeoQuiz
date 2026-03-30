@@ -1,0 +1,151 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.page {
+  padding-top: calc($header-h + $sp-12);
+  padding-bottom: $sp-24;
+  min-height: 100vh;
+}
+
+.scoreHero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $sp-4;
+  margin-bottom: $sp-8;
+}
+
+.newBestBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: $sp-2;
+  background: linear-gradient(135deg, #f59e0b, #f97316);
+  color: #fff;
+  padding: $sp-2 $sp-5;
+  border-radius: $r-full;
+  font-size: $fs-sm;
+  font-weight: 700;
+  animation: pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.perfectBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: $sp-2;
+  background: linear-gradient(135deg, #009EDB, #0077A8);
+  color: #fff;
+  padding: $sp-2 $sp-5;
+  border-radius: $r-full;
+  font-size: $fs-sm;
+  font-weight: 700;
+  animation: pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s both;
+}
+
+.scoreCircle {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  border: 3px solid var(--score-color, var(--primary));
+  box-shadow: 0 0 48px color-mix(in srgb, var(--score-color, var(--primary)) 30%, transparent);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: $sp-1;
+  animation: scaleIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.scoreValue {
+  font-family: $font-display;
+  font-size: $fs-5xl;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: var(--score-color, var(--primary));
+  line-height: 1;
+}
+
+.scoreLabel { font-size: $fs-sm; font-weight: 600; color: var(--text-muted); }
+
+.scoreDetail { font-size: $fs-lg; color: var(--text-muted); text-align: center; }
+
+.bests {
+  display: flex;
+  gap: $sp-4;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: $sp-8;
+}
+
+.bestCard {
+  @include card;
+  padding: $sp-4 $sp-6;
+  display: flex;
+  align-items: center;
+  gap: $sp-3;
+}
+
+.bestIcon { color: var(--primary); flex-shrink: 0; }
+.bestTitle { font-size: $fs-xs; color: var(--text-muted); font-weight: 500; margin-bottom: $sp-1; }
+.bestValue { font-family: $font-display; font-size: $fs-2xl; font-weight: 800; letter-spacing: -0.03em; color: var(--text); }
+
+.actions {
+  display: flex;
+  gap: $sp-3;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: $sp-12;
+}
+
+.review { max-width: 680px; margin: 0 auto; }
+
+.reviewTitle {
+  font-family: $font-display;
+  font-size: $fs-2xl;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  margin-bottom: $sp-5;
+  span { color: var(--text-muted); font-weight: 400; }
+}
+
+.reviewGrid { display: flex; flex-direction: column; gap: $sp-2; }
+
+.reviewCard {
+  @include card;
+  padding: $sp-4;
+  display: flex;
+  align-items: center;
+  gap: $sp-4;
+}
+
+.reviewInfo { flex: 1; }
+.reviewCorrect { font-weight: 600; font-size: $fs-sm; }
+.reviewContinent { font-size: $fs-xs; color: var(--primary); }
+
+.reviewWrong {
+  font-size: $fs-xs;
+  color: var(--error);
+  background: var(--error-light);
+  padding: $sp-1 $sp-3;
+  border-radius: $r-full;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.reviewTimeout {
+  font-size: $fs-xs;
+  color: var(--text-muted);
+  background: var(--bg-surface);
+  padding: $sp-1 $sp-3;
+  border-radius: $r-full;
+  white-space: nowrap;
+}
+
+@keyframes pop {
+  from { transform: scale(0.8); opacity: 0; }
+  to   { transform: scale(1);   opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from { transform: scale(0.7); opacity: 0; }
+  to   { transform: scale(1);   opacity: 1; }
+}
