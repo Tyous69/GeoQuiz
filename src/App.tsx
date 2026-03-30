@@ -1,25 +1,17 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import Header from './components/layout/header/Header'
-import Footer from './components/layout/footer/Footer'
-import Home from './pages/home/Home'
+import { BrowserRouter } from 'react-router-dom';
+import { ThemeProvider } from './context/ThemeContext';
+import { GameProvider } from './context/GameContext';
+import AppRouter from './router/AppRouter';
+import './styles/global.scss';
 
-function App() {
+export default function App() {
   return (
     <BrowserRouter>
-      <Header />
-      <main>
-        <Routes>
-          {/* Home route */}
-            <Route path="/" element={
-              <>
-                <Home />
-              </>
-            } />
-        </Routes>
-      </main>
-      <Footer />
+      <ThemeProvider>
+        <GameProvider>
+          <AppRouter />
+        </GameProvider>
+      </ThemeProvider>
     </BrowserRouter>
-  )
+  );
 }
-
-export default App
