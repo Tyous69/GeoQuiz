@@ -13,26 +13,33 @@ interface Props {
 }
 
 export default function FlagToCountry({ question, onAnswer, feedback, startTime, inputMode }: Props) {
-  const [selected, setSelected] = useState<number | null>(null);
-  const [typed, setTyped] = useState('');
+  const [selected,  setSelected]  = useState<number | null>(null);
+  const [typed,     setTyped]     = useState('');
   const [submitted, setSubmitted] = useState(false);
+  const [ratio,     setRatio]     = useState(3 / 2);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     setSelected(null);
     setTyped('');
     setSubmitted(false);
+    setRatio(3 / 2);
     if (inputMode === 'libre') setTimeout(() => inputRef.current?.focus(), 50);
   }, [question, inputMode]);
 
-  // QCM
+  const handleImageLoad = (e: React.SyntheticEvent<HTMLImageElement>) => {
+    const img = e.currentTarget;
+    if (img.naturalWidth && img.naturalHeight) {
+      setRatio(img.naturalWidth / img.naturalHeight);
+    }
+  };
+
   const handleSelect = (index: number) => {
     if (selected !== null || feedback !== null) return;
     setSelected(index);
     onAnswer(index, Math.round((Date.now() - startTime) / 1000));
   };
 
-  // Free typing
   const handleSubmit = () => {
     if (submitted || feedback !== null) return;
     setSubmitted(true);
@@ -41,16 +48,28 @@ export default function FlagToCountry({ question, onAnswer, feedback, startTime,
     onAnswer(idx, Math.round((Date.now() - startTime) / 1000));
   };
 
+  const maxH = 160;
+  const maxW = 260;
+  const h = Math.min(maxH, maxW / ratio);
+  const w = h * ratio;
+
   return (
     <div className={styles.wrapper}>
       <p className={styles.prompt}>Quel est ce pays ?</p>
 
       <div className={styles.flagDisplay}>
-        <FlagIcon code={question.country.code} size="xl" />
+        <img
+          src={`https://flagcdn.com/w320/${question.country.code.toLowerCase()}.png`}
+          srcSet={`https://flagcdn.com/w160/${question.country.code.toLowerCase()}.png 1x, https://flagcdn.com/w320/${question.country.code.toLowerCase()}.png 2x`}
+          alt={question.country.name}
+          className={styles.flagImg}
+          style={{ width: `${w}px`, height: `${h}px` }}
+          onLoad={handleImageLoad}
+          draggable={false}
+        />
       </div>
 
       {inputMode === 'qcm' ? (
-        /* QCM — only country names, NO flags in options */
         <div className={styles.options}>
           {question.options.map((option, i) => {
             let state = '';
@@ -58,7 +77,6 @@ export default function FlagToCountry({ question, onAnswer, feedback, startTime,
               if (i === question.correctIndex) state = styles.correct;
               else if (i === selected) state = styles.wrong;
             } else if (i === selected) state = styles.selecting;
-
             return (
               <button
                 key={option.code}
@@ -74,12 +92,14 @@ export default function FlagToCountry({ question, onAnswer, feedback, startTime,
           })}
         </div>
       ) : (
-        /* Saisie libre */
         <div className={styles.freeWrap}>
           <div className={styles.freeInputRow}>
             <input
               ref={inputRef}
-              className={`${styles.freeInput} ${submitted ? (normalizeAnswer(typed) === normalizeAnswer(question.country.name) ? styles.inputCorrect : styles.inputWrong) : ''}`}
+              className={`${styles.freeInput} ${submitted
+                ? normalizeAnswer(typed) === normalizeAnswer(question.country.name)
+                  ? styles.inputCorrect : styles.inputWrong
+                : ''}`}
               type="text"
               placeholder="Tapez le nom du pays…"
               value={typed}
@@ -96,7 +116,6 @@ export default function FlagToCountry({ question, onAnswer, feedback, startTime,
               Valider
             </button>
           </div>
-
           {feedback !== null && (
             <p className={`${styles.freeResult} ${feedback === 'correct' ? styles.correct : styles.wrong}`}>
               {feedback === 'correct'

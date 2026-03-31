@@ -38,7 +38,6 @@ export default function Game() {
   useEffect(() => {
     questionStartRef.current = Date.now();
     if (hasTimer) { timer.reset(timerSeconds); setTimeout(() => timer.start(), 50); }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentIndex]);
 
   useEffect(() => {
@@ -50,7 +49,6 @@ export default function Game() {
     saveStats(config.mode, config.difficulty, config.continent, score, hasTimer ? totalTime : null, config.questionCount);
     sessionStorage.setItem('geoquiz_last_results', JSON.stringify({ results, totalTime, config }));
     navigate('/résultats', { replace: true });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFinished, results]);
 
   if (!config || !currentQuestion) return null;

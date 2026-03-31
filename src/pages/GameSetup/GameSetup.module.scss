@@ -69,7 +69,6 @@
   font-weight: 400;
 }
 
-// ─── Continent ────────────────────────────────────────────────────────────────
 .continentGrid {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
@@ -127,7 +126,6 @@
   color: var(--text-muted);
 }
 
-// ─── Mode ─────────────────────────────────────────────────────────────────────
 .modeGrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -180,7 +178,6 @@
   line-height: 1.4;
 }
 
-// ─── Difficulty ───────────────────────────────────────────────────────────────
 .diffGrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -239,7 +236,6 @@
 .warning .diffTime { color: var(--warning); }
 .error   .diffTime { color: var(--error); }
 
-// ─── Question count ───────────────────────────────────────────────────────────
 .countRow {
   display: flex;
   gap: $sp-3;
@@ -277,7 +273,6 @@
   }
 }
 
-// ─── Footer ───────────────────────────────────────────────────────────────────
 .footer {
   margin-top: $sp-12;
   padding-top: $sp-8;
@@ -307,7 +302,6 @@
 .warning { color: var(--warning); }
 .error   { color: var(--error); }
 
-// FIX: force text color on all button cards (browser default overrides CSS vars)
 .continentCard,
 .modeCard,
 .diffCard,
@@ -340,4 +334,11 @@
 .continentIcon {
   color: var(--primary);
   flex-shrink: 0;
+}
+
+.disabledCard {
+  opacity: 0.35;
+  cursor: not-allowed;
+  pointer-events: none;
+  filter: grayscale(0.4);
 }

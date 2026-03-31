@@ -1,4 +1,5 @@
-import { FiZap, FiPlay, FiAward } from 'react-icons/fi';
+import { useState } from 'react';
+import { FiAward, FiZap, FiPlay, FiStar, FiTrash2, FiAlertTriangle } from 'react-icons/fi';
 import { getAllStats } from '../../utils/storage';
 import { formatTime } from '../../utils/score';
 import styles from './Scores.module.scss';
@@ -9,23 +10,64 @@ const MODE_LABELS: Record<string, string> = {
   'map-to-country':  'Carte → Pays',
 };
 const DIFF_LABELS: Record<string, string> = {
-  facile: 'Facile', moyen: 'Moyen', difficile: 'Difficile'
+  facile: 'Facile', moyen: 'Moyen', difficile: 'Difficile',
 };
 const DIFF_COLOR: Record<string, string> = {
-  facile: 'success', moyen: 'warning', difficile: 'error'
+  facile: 'success', moyen: 'warning', difficile: 'error',
 };
 
 export default function Scores() {
-  const stats = getAllStats();
+  const [stats, setStats]       = useState(() => getAllStats());
+  const [confirm, setConfirm]   = useState(false);
+
+  const handleReset = () => {
+    localStorage.removeItem('geoquiz_stats');
+    setStats({});
+    setConfirm(false);
+  };
+
   const entries = Object.entries(stats);
 
   return (
     <div className={styles.page}>
       <div className="container">
+
         <div className={styles.header}>
-          <p className={styles.eyebrow}>Historique</p>
-          <h1 className={styles.title}>Mes meilleurs scores</h1>
+          <div>
+            <p className={styles.eyebrow}>Historique</p>
+            <h1 className={styles.title}>Mes meilleurs scores</h1>
+          </div>
+
+          {entries.length > 0 && (
+            <button
+              className={styles.resetBtn}
+              onClick={() => setConfirm(true)}
+              title="Réinitialiser tous les scores"
+            >
+              <FiTrash2 size={15} />
+              Réinitialiser
+            </button>
+          )}
         </div>
+
+        {/* Confirm dialog */}
+        {confirm && (
+          <div className={styles.confirmBox}>
+            <FiAlertTriangle size={20} className={styles.confirmIcon} />
+            <div className={styles.confirmText}>
+              <p className={styles.confirmTitle}>Supprimer tous les scores ?</p>
+              <p className={styles.confirmSub}>Cette action est irréversible.</p>
+            </div>
+            <div className={styles.confirmActions}>
+              <button className={styles.cancelBtn} onClick={() => setConfirm(false)}>
+                Annuler
+              </button>
+              <button className={styles.deleteBtn} onClick={handleReset}>
+                Supprimer
+              </button>
+            </div>
+          </div>
+        )}
 
         {entries.length === 0 ? (
           <div className={styles.empty}>
@@ -50,7 +92,7 @@ export default function Scores() {
 
                   {isPerfect && (
                     <div className={styles.perfectBadge}>
-                      <FiAward size={12} /> Score parfait !
+                      <FiStar size={12} /> Score parfait !
                     </div>
                   )}
 

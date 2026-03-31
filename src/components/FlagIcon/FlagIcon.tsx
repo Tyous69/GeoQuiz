@@ -1,4 +1,3 @@
-import * as Flags from 'country-flag-icons/react/3x2';
 import styles from './FlagIcon.module.scss';
 
 interface FlagIconProps {
@@ -8,19 +7,20 @@ interface FlagIconProps {
 }
 
 export default function FlagIcon({ code, size = 'md', className = '' }: FlagIconProps) {
-  const FlagComponent = (Flags as Record<string, React.ComponentType<React.SVGProps<SVGSVGElement>>>)[code];
-
-  if (!FlagComponent) {
-    return (
-      <div className={`${styles.placeholder} ${styles[size]} ${className}`}>
-        <span>🏳️</span>
-      </div>
-    );
-  }
+  const lower = code.toLowerCase();
 
   return (
     <div className={`${styles.wrapper} ${styles[size]} ${className}`}>
-      <FlagComponent className={styles.flag} />
+      <img
+        src={`https://flagcdn.com/w320/${lower}.png`}
+        srcSet={`https://flagcdn.com/w160/${lower}.png 1x, https://flagcdn.com/w320/${lower}.png 2x`}
+        alt={code}
+        className={styles.flag}
+        loading="lazy"
+        onError={(e) => {
+          (e.target as HTMLImageElement).style.display = 'none';
+        }}
+      />
     </div>
   );
 }

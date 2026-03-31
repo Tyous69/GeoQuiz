@@ -3,9 +3,7 @@
 
 .header {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
+  top: 0; left: 0; right: 0;
   z-index: 100;
   height: $header-h;
   background: var(--bg);
@@ -19,43 +17,38 @@
   height: 100%;
 }
 
-// Logo
 .logo {
   display: flex;
   align-items: center;
-  gap: $sp-2;
+  gap: $sp-3;
   text-decoration: none;
   flex-shrink: 0;
 
-  &:hover .logoText {
-    color: var(--primary);
-  }
+  &:hover .logoText { color: var(--primary); }
 }
 
-.logoIcon {
-  display: flex;
-  align-items: center;
-  transition: opacity $t-base;
+.logoImg {
+  width: 38px;
+  height: 38px;
+  display: block;
+  flex-shrink: 0;
 }
 
 .logoText {
   font-family: $font-display;
-  font-size: $fs-lg;
+  font-size: $fs-2xl;
   font-weight: 700;
   color: var(--text);
   transition: color $t-base;
   letter-spacing: -0.02em;
 }
 
-// Nav
 .nav {
   display: flex;
   align-items: center;
   gap: $sp-1;
 
-  @include responsive($bp-md) {
-    display: none;
-  }
+  @include responsive($bp-md) { display: none; }
 }
 
 .navLink {
@@ -65,20 +58,11 @@
   color: var(--text-muted);
   border-radius: $r-md;
   transition: color $t-base, background $t-base;
-  position: relative;
 
-  &:hover {
-    color: var(--text);
-    background: var(--bg-surface);
-  }
-
-  &.active {
-    color: var(--primary);
-    font-weight: 600;
-  }
+  &:hover { color: var(--text); background: var(--bg-surface); }
+  &.active { color: var(--primary); font-weight: 600; }
 }
 
-// Actions
 .actions {
   display: flex;
   align-items: center;
@@ -86,9 +70,65 @@
   flex-shrink: 0;
 }
 
-.logoImg {
-  width: 26px;
-  height: 26px;
-  display: block;
-  flex-shrink: 0;
+.burger {
+  display: none;
+  width: 36px;
+  height: 36px;
+  border-radius: $r-md;
+  border: 1.5px solid var(--border);
+  background: var(--bg-surface);
+  color: var(--text-muted);
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all $t-base;
+
+  &:hover { color: var(--text); border-color: var(--border-hover); }
+
+  @include responsive($bp-md) { display: flex; }
+}
+
+.overlay {
+  position: fixed;
+  inset: $header-h 0 0 0;
+  z-index: 99;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  animation: fadeIn 0.2s ease;
+}
+
+.mobileMenu {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border);
+  padding: $sp-4 $sp-6 $sp-6;
+  display: flex;
+  flex-direction: column;
+  gap: $sp-1;
+  animation: slideDown 0.25s ease;
+}
+
+.mobileLink {
+  padding: $sp-4 $sp-3;
+  font-family: $font-display;
+  font-size: $fs-xl;
+  font-weight: 600;
+  color: var(--text-muted);
+  border-radius: $r-lg;
+  transition: all $t-base;
+  letter-spacing: -0.01em;
+
+  &:hover { color: var(--text); background: var(--bg-surface); }
+  &.active { color: var(--primary); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-12px); }
+  to   { opacity: 1; transform: translateY(0); }
 }

@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { FiZap, FiPlay, FiAward, FiRotateCcw, FiHome, FiPlusCircle } from 'react-icons/fi';
+import { FiAward, FiZap, FiPlay, FiStar, FiRotateCcw, FiHome, FiPlusCircle } from 'react-icons/fi';
 import { useGameConfig } from '../../context/GameContext';
 import { getAllStats } from '../../utils/storage';
 import { calculateScore, formatTime, getScoreLabel } from '../../utils/score';
@@ -16,7 +16,6 @@ export default function Summary() {
   const parsed: { results: GameResult[]; totalTime: number; config: GameConfig } | null =
     raw ? JSON.parse(raw) : null;
 
-  // Use config from sessionStorage as fallback (in case context was lost)
   const activeConfig = config ?? parsed?.config;
   const results: GameResult[] = parsed?.results ?? [];
   const totalTime: number = parsed?.totalTime ?? 0;
@@ -51,7 +50,7 @@ export default function Summary() {
           )}
           {isPerfect && (
             <div className={styles.perfectBadge}>
-              <FiAward size={14} /> Score parfait — 100% !
+              <FiStar size={14} /> Score parfait — 100% !
             </div>
           )}
 

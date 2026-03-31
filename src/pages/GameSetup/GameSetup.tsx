@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FiGlobe, FiFlag, FiMap, FiType, FiCheck, FiClock, FiZap, FiArrowRight, FiList, FiEdit3 } from 'react-icons/fi';
 import { useGameConfig } from '../../context/GameContext';
@@ -8,8 +8,8 @@ import countriesData from '../../data/countries.json';
 import styles from './GameSetup.module.scss';
 
 const INPUT_MODES: { value: InputMode; label: string; desc: string; icon: React.ReactNode }[] = [
-  { value: 'qcm',   label: 'QCM',        desc: 'Choisissez parmi 4 propositions', icon: <FiList /> },
-  { value: 'libre', label: 'Saisie libre', desc: 'Tapez le nom vous-même (une chance)', icon: <FiEdit3 /> },
+  { value: 'qcm',   label: 'QCM',         desc: 'Choisissez parmi 4 propositions',       icon: <FiList />  },
+  { value: 'libre', label: 'Saisie libre', desc: 'Tapez le nom vous-même (une chance)',   icon: <FiEdit3 /> },
 ];
 
 const CONTINENTS: { value: Continent; label: string; count: number }[] = [
@@ -22,15 +22,15 @@ const CONTINENTS: { value: Continent; label: string; count: number }[] = [
 ];
 
 const MODES: { value: GameMode; label: string; desc: string; icon: React.ReactNode }[] = [
-  { value: 'flag-to-country', label: 'Drapeau → Pays',  desc: 'Identifiez le pays à partir de son drapeau', icon: <FiFlag /> },
-  { value: 'country-to-flag', label: 'Pays → Drapeau',  desc: 'Retrouvez le drapeau du pays affiché',       icon: <FiType /> },
-  { value: 'map-to-country',  label: 'Carte → Pays',    desc: 'Nommez le pays mis en surbrillance',         icon: <FiMap />  },
+  { value: 'flag-to-country', label: 'Drapeau → Pays', desc: 'Identifiez le pays à partir de son drapeau', icon: <FiFlag /> },
+  { value: 'country-to-flag', label: 'Pays → Drapeau', desc: 'Retrouvez le drapeau du pays affiché',       icon: <FiType /> },
+  { value: 'map-to-country',  label: 'Carte → Pays',   desc: 'Nommez le pays mis en surbrillance',         icon: <FiMap />  },
 ];
 
 const DIFFICULTIES: { value: Difficulty; label: string; desc: string; color: string; time: string; icon: React.ReactNode }[] = [
-  { value: 'facile',    label: 'Facile',    desc: 'Sans limite de temps',      color: 'success', time: '∞',   icon: <FiCheck /> },
-  { value: 'moyen',     label: 'Moyen',     desc: '20 secondes par question',  color: 'warning', time: '20s', icon: <FiClock /> },
-  { value: 'difficile', label: 'Difficile', desc: '7 secondes par question',   color: 'error',   time: '7s',  icon: <FiZap />   },
+  { value: 'facile',    label: 'Facile',    desc: 'Sans limite de temps',     color: 'success', time: '∞',   icon: <FiCheck /> },
+  { value: 'moyen',     label: 'Moyen',     desc: '20 secondes par question', color: 'warning', time: '20s', icon: <FiClock /> },
+  { value: 'difficile', label: 'Difficile', desc: '7 secondes par question',  color: 'error',   time: '7s',  icon: <FiZap />   },
 ];
 
 const QUESTION_COUNTS = [5, 10, 15, 20, 'Tout'] as const;
@@ -44,6 +44,13 @@ export default function GameSetup() {
   const [mode,          setMode]          = useState<GameMode>('flag-to-country');
   const [difficulty,    setDifficulty]    = useState<Difficulty>('facile');
   const [questionCount, setQuestionCount] = useState<number | 'Tout'>(10);
+
+  // Saisie libre incompatible avec Pays → Drapeau : reset auto
+  useEffect(() => {
+    if (mode === 'country-to-flag' && inputMode === 'libre') {
+      setInputMode('qcm');
+    }
+  }, [mode, inputMode]);
 
   const countries = countriesData as { code: string; name: string; continent: Continent }[];
   const availableCount = continent === 'Tous'
@@ -69,27 +76,34 @@ export default function GameSetup() {
 
         <div className={styles.sections}>
 
-          {/* Input mode */}
+          {/* Type de réponse */}
           <section className={styles.section}>
             <h2 className={styles.sectionLabel}><span>01</span> Type de réponse</h2>
             <div className={styles.inputModeGrid}>
-              {INPUT_MODES.map(m => (
-                <button
-                  key={m.value}
-                  className={`${styles.modeCard} ${inputMode === m.value ? styles.selected : ''}`}
-                  onClick={() => setInputMode(m.value)}
-                >
-                  <span className={styles.modeIcon}>{m.icon}</span>
-                  <div>
-                    <p className={styles.modeName}>{m.label}</p>
-                    <p className={styles.modeDesc}>{m.desc}</p>
-                  </div>
-                </button>
-              ))}
+              {INPUT_MODES.map(m => {
+                const isDisabled = m.value === 'libre' && mode === 'country-to-flag';
+                return (
+                  <button
+                    key={m.value}
+                    className={`${styles.modeCard} ${inputMode === m.value ? styles.selected : ''} ${isDisabled ? styles.disabledCard : ''}`}
+                    onClick={() => !isDisabled && setInputMode(m.value)}
+                    disabled={isDisabled}
+                    title={isDisabled ? 'Non disponible avec le mode Pays → Drapeau' : undefined}
+                  >
+                    <span className={styles.modeIcon}>{m.icon}</span>
+                    <div>
+                      <p className={styles.modeName}>{m.label}</p>
+                      <p className={styles.modeDesc}>
+                        {isDisabled ? 'Non disponible dans ce mode' : m.desc}
+                      </p>
+                    </div>
+                  </button>
+                );
+              })}
             </div>
           </section>
 
-          {/* Continent */}
+          {/* Zone géographique */}
           <section className={styles.section}>
             <h2 className={styles.sectionLabel}><span>02</span> Zone géographique</h2>
             <div className={styles.continentGrid}>
@@ -107,7 +121,7 @@ export default function GameSetup() {
             </div>
           </section>
 
-          {/* Game mode */}
+          {/* Mode de jeu */}
           <section className={styles.section}>
             <h2 className={styles.sectionLabel}><span>03</span> Mode de jeu</h2>
             <div className={styles.modeGrid}>
@@ -127,7 +141,7 @@ export default function GameSetup() {
             </div>
           </section>
 
-          {/* Difficulty */}
+          {/* Difficulté */}
           <section className={styles.section}>
             <h2 className={styles.sectionLabel}><span>04</span> Difficulté</h2>
             <div className={styles.diffGrid}>
@@ -150,7 +164,7 @@ export default function GameSetup() {
             </div>
           </section>
 
-          {/* Question count */}
+          {/* Nombre de questions */}
           <section className={styles.section}>
             <h2 className={styles.sectionLabel}>
               <span>05</span> Nombre de questions
@@ -158,11 +172,11 @@ export default function GameSetup() {
             </h2>
             <div className={styles.countRow}>
               {QUESTION_COUNTS.map(n => {
-                const disabled = typeof n === 'number' && n > availableCount;
+                const isDisabled = typeof n === 'number' && n > availableCount;
                 return (
                   <button
                     key={n}
-                    disabled={disabled}
+                    disabled={isDisabled}
                     className={`${styles.countBtn} ${questionCount === n ? styles.selected : ''}`}
                     onClick={() => setQuestionCount(n as number | 'Tout')}
                   >
@@ -174,6 +188,7 @@ export default function GameSetup() {
           </section>
         </div>
 
+        {/* Footer résumé + lancer */}
         <div className={styles.footer}>
           <div className={styles.summary}>
             <span>{inputMode === 'qcm' ? 'QCM' : 'Saisie libre'}</span>

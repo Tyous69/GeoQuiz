@@ -1,143 +1,184 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import * as topojson from 'topojson-client';
 import styles from './WorldGlobe.module.scss';
 
 const GEO_URL = 'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json';
-const W = 480, H = 480, R = 200, CX = 240, CY = 240;
+const R = 190, CX = 240, CY = 240;
 
-function toRad(d: number) { return d * Math.PI / 180; }
+function toRad(d: number) { return (d * Math.PI) / 180; }
 
 function projectOrtho(lon: number, lat: number, rotY: number): [number, number] | null {
   const λ = toRad(lon - rotY);
   const φ = toRad(lat);
   const cosC = Math.cos(φ) * Math.cos(λ);
-  if (cosC < 0) return null;
-  return [CX + R * Math.cos(φ) * Math.sin(λ), CY - R * Math.sin(φ)];
+  if (cosC < 0.15) return null;
+  const x = CX + R * Math.cos(φ) * Math.sin(λ);
+  const y = CY - R * Math.sin(φ);
+  return [x, y];
 }
 
 function ringToPath(ring: [number, number][], rotY: number): string {
-  const segs: string[][] = [];
-  let curr: string[] = [];
+  let d = '';
+  let penDown = false;
+
   for (const [lon, lat] of ring) {
     const p = projectOrtho(lon, lat, rotY);
     if (p) {
-      curr.push(`${p[0].toFixed(1)},${p[1].toFixed(1)}`);
-    } else if (curr.length >= 2) {
-      segs.push(curr); curr = [];
-    } else { curr = []; }
+      if (!penDown) {
+        d += `M${p[0].toFixed(1)},${p[1].toFixed(1)}`;
+        penDown = true;
+      } else {
+        d += `L${p[0].toFixed(1)},${p[1].toFixed(1)}`;
+      }
+    } else {
+      penDown = false;
+    }
   }
-  if (curr.length >= 2) segs.push(curr);
-  return segs.map(s => 'M' + s.join('L')).join(' ');
+  return d;
 }
 
 function featureToPath(geometry: any, rotY: number): string {
   if (!geometry) return '';
   try {
-    const rings =
+    const rings: [number, number][][] =
       geometry.type === 'Polygon' ? geometry.coordinates :
       geometry.type === 'MultiPolygon' ? geometry.coordinates.flat(1) : [];
-    return rings.map((r: [number, number][]) => ringToPath(r, rotY)).join(' ');
+    return rings.map(r => ringToPath(r, rotY)).filter(Boolean).join(' ');
   } catch { return ''; }
 }
 
-function gridLines(rotY: number): string {
-  const paths: string[] = [];
-  // Meridians every 30°
-  for (let lon = -180; lon <= 180; lon += 30) {
-    const pts: string[] = [];
-    for (let lat = -90; lat <= 90; lat += 2) {
+function buildGrid(rotY: number): string {
+  let d = '';
+  for (let lon = -180; lon < 180; lon += 30) {
+    let seg = '', pen = false;
+    for (let lat = -85; lat <= 85; lat += 3) {
       const p = projectOrtho(lon, lat, rotY);
-      if (p) pts.push(`${p[0].toFixed(1)},${p[1].toFixed(1)}`);
-      else if (pts.length > 1) { paths.push('M' + pts.join('L')); pts.length = 0; }
-      else pts.length = 0;
+      if (p) {
+        seg += pen
+          ? `L${p[0].toFixed(1)},${p[1].toFixed(1)}`
+          : `M${p[0].toFixed(1)},${p[1].toFixed(1)}`;
+        pen = true;
+      } else {
+        pen = false;
+      }
     }
-    if (pts.length > 1) paths.push('M' + pts.join('L'));
+    d += seg;
   }
-  // Parallels every 30°
   for (let lat = -60; lat <= 60; lat += 30) {
-    const pts: string[] = [];
-    for (let lon = -180; lon <= 180; lon += 2) {
+    let seg = '', pen = false;
+    for (let lon = -180; lon <= 180; lon += 3) {
       const p = projectOrtho(lon, lat, rotY);
-      if (p) pts.push(`${p[0].toFixed(1)},${p[1].toFixed(1)}`);
-      else if (pts.length > 1) { paths.push('M' + pts.join('L')); pts.length = 0; }
-      else pts.length = 0;
+      if (p) {
+        seg += pen
+          ? `L${p[0].toFixed(1)},${p[1].toFixed(1)}`
+          : `M${p[0].toFixed(1)},${p[1].toFixed(1)}`;
+        pen = true;
+      } else {
+        pen = false;
+      }
     }
-    if (pts.length > 1) paths.push('M' + pts.join('L'));
+    d += seg;
   }
-  return paths.join(' ');
+  return d;
 }
 
-interface GeoFeature { geometry: any; }
+interface Feature { geometry: any; }
 
 export default function WorldGlobe() {
-  const [features, setFeatures] = useState<GeoFeature[]>([]);
+  const [features, setFeatures] = useState<Feature[]>([]);
+  const rotYRef = useRef(10);
   const [rotY, setRotY] = useState(10);
-  const rafRef = useRef<number>();
-  const lastTimeRef = useRef(0);
+  const rafRef = useRef<number>(0);
+  const lastRenderRef = useRef(0);
 
   useEffect(() => {
-    fetch(GEO_URL).then(r => r.json()).then(world => {
-      const countries = topojson.feature(world, world.objects.countries) as any;
-      setFeatures(countries.features);
-    }).catch(() => {});
+    fetch(GEO_URL)
+      .then(r => r.json())
+      .then(world => {
+        const fc = topojson.feature(world, world.objects.countries) as any;
+        setFeatures(fc.features);
+      })
+      .catch(() => {});
   }, []);
 
-  // Slow rotation at ~10fps
-  useEffect(() => {
-    const animate = (time: number) => {
-      if (time - lastTimeRef.current >= 100) {
-        lastTimeRef.current = time;
-        setRotY(r => (r + 0.4) % 360);
-      }
-      rafRef.current = requestAnimationFrame(animate);
-    };
+  const animate = useCallback((ts: number) => {
     rafRef.current = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(rafRef.current!);
+    if (ts - lastRenderRef.current < 33) return; // ~30fps
+    lastRenderRef.current = ts;
+    rotYRef.current = (rotYRef.current + 0.25) % 360;
+    setRotY(rotYRef.current);
   }, []);
 
-  const grid = gridLines(rotY);
+  useEffect(() => {
+    rafRef.current = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(rafRef.current);
+  }, [animate]);
+
+  const grid = buildGrid(rotY);
 
   return (
     <div className={styles.globe}>
-      <svg viewBox={`0 0 ${W} ${H}`} className={styles.svg}>
+      <svg viewBox="0 0 480 480" className={styles.svg}>
         <defs>
-          <clipPath id="globe-clip">
+          <clipPath id="gc">
             <circle cx={CX} cy={CY} r={R} />
           </clipPath>
-          <radialGradient id="globe-ocean" cx="40%" cy="35%" r="65%">
-            <stop offset="0%" stopColor="#0a1628" />
-            <stop offset="100%" stopColor="#050c18" />
+          <radialGradient id="go" cx="38%" cy="32%" r="65%">
+            <stop offset="0%" stopColor="#071528" />
+            <stop offset="100%" stopColor="#040c18" />
           </radialGradient>
-          <radialGradient id="globe-shine" cx="35%" cy="30%" r="60%">
+          <radialGradient id="gshine" cx="32%" cy="28%" r="55%">
             <stop offset="0%" stopColor="rgba(255,255,255,0.06)" />
             <stop offset="100%" stopColor="rgba(255,255,255,0)" />
           </radialGradient>
         </defs>
 
-        {/* Ocean */}
-        <circle cx={CX} cy={CY} r={R} fill="url(#globe-ocean)" />
+        <circle cx={CX} cy={CY} r={R} fill="url(#go)" />
 
-        <g clipPath="url(#globe-clip)">
-          {/* Grid */}
-          <path d={grid} fill="none" stroke="rgba(0,158,219,0.1)" strokeWidth="0.5" />
+        <g clipPath="url(#gc)">
+          <path
+            d={grid}
+            fill="none"
+            stroke="rgba(0,158,219,0.1)"
+            strokeWidth="0.5"
+          />
 
-          {/* Countries */}
-          {features.map((f, i) => (
-            <path
-              key={i}
-              d={featureToPath(f.geometry, rotY)}
-              fill="rgba(0,158,219,0.25)"
-              stroke="rgba(0,158,219,0.5)"
-              strokeWidth="0.6"
-            />
-          ))}
+          {features.map((f, i) => {
+            const d = featureToPath(f.geometry, rotY);
+            if (!d) return null;
+            return (
+              <path
+                key={i}
+                d={d}
+                fill="none"
+                stroke="rgba(0,158,219,0.6)"
+                strokeWidth="0.7"
+              />
+            );
+          })}
 
-          {/* Shine overlay */}
-          <circle cx={CX} cy={CY} r={R} fill="url(#globe-shine)" />
+          {features.map((f, i) => {
+            const d = featureToPath(f.geometry, rotY);
+            if (!d) return null;
+            return (
+              <path
+                key={`fill-${i}`}
+                d={d}
+                fill="rgba(0,158,219,0.08)"
+                stroke="none"
+              />
+            );
+          })}
+
+          <circle cx={CX} cy={CY} r={R} fill="url(#gshine)" />
         </g>
 
-        {/* Border */}
-        <circle cx={CX} cy={CY} r={R} fill="none" stroke="rgba(0,158,219,0.3)" strokeWidth="1.5" />
+        <circle
+          cx={CX} cy={CY} r={R}
+          fill="none"
+          stroke="rgba(0,158,219,0.3)"
+          strokeWidth="1.5"
+        />
       </svg>
       <div className={styles.glow} />
     </div>

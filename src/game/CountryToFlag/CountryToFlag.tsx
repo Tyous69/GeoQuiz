@@ -70,7 +70,6 @@ export default function CountryToFlag({ question, onAnswer, feedback, startTime,
         </div>
       ) : (
         <div className={styles.freeWrap}>
-          {/* In libre mode for CountryToFlag, we show the flag and ask to type the country name */}
           <div className={styles.flagHint}>
             <FlagIcon code={question.country.code} size="xl" />
           </div>

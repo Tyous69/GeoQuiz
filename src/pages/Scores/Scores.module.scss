@@ -7,7 +7,13 @@
   min-height: 100vh;
 }
 
-.header { margin-bottom: $sp-10; }
+.header {
+  @include flex-between;
+  align-items: flex-start;
+  margin-bottom: $sp-8;
+  gap: $sp-4;
+  flex-wrap: wrap;
+}
 
 .eyebrow {
   font-size: $fs-sm;
@@ -23,6 +29,102 @@
   font-size: clamp($fs-3xl, 4vw, $fs-5xl);
   font-weight: 800;
   letter-spacing: -0.03em;
+}
+
+.resetBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: $sp-2;
+  height: 38px;
+  padding: 0 $sp-4;
+  border-radius: $r-full;
+  border: 1.5px solid var(--border);
+  background: var(--bg-surface);
+  color: var(--text-muted);
+  font-family: $font-display;
+  font-size: $fs-sm;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all $t-base;
+  flex-shrink: 0;
+  margin-top: $sp-2;
+
+  &:hover {
+    background: var(--error-light);
+    border-color: var(--error);
+    color: var(--error);
+  }
+}
+
+.confirmBox {
+  display: flex;
+  align-items: center;
+  gap: $sp-4;
+  flex-wrap: wrap;
+  padding: $sp-4 $sp-5;
+  border-radius: $r-xl;
+  border: 1.5px solid var(--error);
+  background: var(--error-light);
+  margin-bottom: $sp-6;
+  animation: slideDown 0.2s ease;
+}
+
+.confirmIcon {
+  color: var(--error);
+  flex-shrink: 0;
+}
+
+.confirmText { flex: 1; }
+
+.confirmTitle {
+  font-family: $font-display;
+  font-size: $fs-base;
+  font-weight: 700;
+  color: var(--error);
+}
+
+.confirmSub {
+  font-size: $fs-xs;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.confirmActions {
+  display: flex;
+  gap: $sp-2;
+  flex-shrink: 0;
+}
+
+.cancelBtn {
+  height: 34px;
+  padding: 0 $sp-4;
+  border-radius: $r-full;
+  border: 1.5px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text-muted);
+  font-family: $font-display;
+  font-size: $fs-sm;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all $t-base;
+
+  &:hover { background: var(--bg-hover); color: var(--text); }
+}
+
+.deleteBtn {
+  height: 34px;
+  padding: 0 $sp-4;
+  border-radius: $r-full;
+  border: 1.5px solid var(--error);
+  background: var(--error);
+  color: #fff;
+  font-family: $font-display;
+  font-size: $fs-sm;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all $t-base;
+
+  &:hover { opacity: 0.85; }
 }
 
 .empty {
@@ -52,7 +154,11 @@
 
   &.perfect {
     border-color: var(--warning);
-    background: linear-gradient(135deg, var(--bg-card), color-mix(in srgb, var(--warning) 5%, var(--bg-card)));
+    background: linear-gradient(
+      135deg,
+      var(--bg-card),
+      color-mix(in srgb, var(--warning) 5%, var(--bg-card))
+    );
   }
 }
 
@@ -99,16 +205,9 @@
   border-top: 1px solid var(--border);
 }
 
-.stat {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
+.stat { display: flex; flex-direction: column; gap: 3px; }
 
-.statIcon {
-  color: var(--text-muted);
-  margin-bottom: 2px;
-}
+.statIcon { color: var(--text-muted); margin-bottom: 2px; }
 
 .statVal {
   font-family: $font-display;
@@ -120,3 +219,8 @@
 }
 
 .statLbl { font-size: $fs-xs; color: var(--text-muted); }
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
